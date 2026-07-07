@@ -19,26 +19,26 @@
   <meta name="author" content="Bingsv">
   <meta name="keywords" content="运维,Linux,Docker,云计算">
   
-    <meta name="description" content="背景作为一名准大四学生，暑假开始系统学习运维。第一步是在云上搞一台属于自己的 Linux 服务器。 我选择了阿里云的学生优惠——**”学生专属算力包”**，有 850 元额度，对学习来说完全够用。 选型过程学生认证之前阿里云学生认证过期了，重新验证了下，很快通过。 选哪个实例学生计划里有几个选项：  e实例 2核2G 轻量应用服务器 2核2G c7实例 2核4G  最终选了 e实例 2核2G，因为">
+    <meta name="description" content="进程管理：服务器上的”任务管理器”每个运行中的程序都是一个进程。Nginx 是进程、Docker 是进程、你的 SSH 连接也是进程。 ps — 查看进程1ps aux     列 含义    USER 谁启动的   PID 进程 ID（唯一编号）   %CPU CPU 占用   %MEM 内存占用   STAT S&#x3D;睡眠 R&#x3D;运行 Z&#x3D;僵尸   在你的服务器上跑 p">
 <meta property="og:type" content="article">
-<meta property="og:title" content="阿里云ECS从零搭建记录">
-<meta property="og:url" content="https://bingsv.github.io/2026/06/27/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="进程管理与Python运维脚本入门">
+<meta property="og:url" content="https://bingsv.github.io/2026/07/04/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B8%8EPython%E8%BF%90%E7%BB%B4%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="Bingsv&#39;s Blog">
-<meta property="og:description" content="背景作为一名准大四学生，暑假开始系统学习运维。第一步是在云上搞一台属于自己的 Linux 服务器。 我选择了阿里云的学生优惠——**”学生专属算力包”**，有 850 元额度，对学习来说完全够用。 选型过程学生认证之前阿里云学生认证过期了，重新验证了下，很快通过。 选哪个实例学生计划里有几个选项：  e实例 2核2G 轻量应用服务器 2核2G c7实例 2核4G  最终选了 e实例 2核2G，因为">
+<meta property="og:description" content="进程管理：服务器上的”任务管理器”每个运行中的程序都是一个进程。Nginx 是进程、Docker 是进程、你的 SSH 连接也是进程。 ps — 查看进程1ps aux     列 含义    USER 谁启动的   PID 进程 ID（唯一编号）   %CPU CPU 占用   %MEM 内存占用   STAT S&#x3D;睡眠 R&#x3D;运行 Z&#x3D;僵尸   在你的服务器上跑 p">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-06-26T17:06:13.000Z">
-<meta property="article:modified_time" content="2026-07-03T11:37:12.544Z">
+<meta property="article:published_time" content="2026-07-04T11:02:29.000Z">
+<meta property="article:modified_time" content="2026-07-04T11:03:16.652Z">
 <meta property="article:author" content="Bingsv">
-<meta property="article:tag" content="阿里云">
-<meta property="article:tag" content="运维">
+<meta property="article:tag" content="Shell">
 <meta property="article:tag" content="Linux">
-<meta property="article:tag" content="ECS">
-<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="进程管理">
+<meta property="article:tag" content="systemd">
+<meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>阿里云ECS从零搭建记录 - Bingsv&#39;s Blog</title>
+  <title>进程管理与Python运维脚本入门 - Bingsv&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -307,7 +307,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="阿里云ECS从零搭建记录"></span>
+            <span id="subtitle" data-typed-text="进程管理与Python运维脚本入门"></span>
           
         </div>
 
@@ -318,8 +318,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-06-27 01:06" pubdate>
-          2026年6月27日 凌晨
+        <time datetime="2026-07-04 19:02" pubdate>
+          2026年7月4日 晚上
         </time>
       </span>
     
@@ -330,7 +330,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          2.7k 字
         
       </span>
     
@@ -341,7 +341,7 @@
         
         
         
-          14 分钟
+          23 分钟
         
       </span>
     
@@ -380,74 +380,140 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">阿里云ECS从零搭建记录</h1>
+            <h1 id="seo-header">进程管理与Python运维脚本入门</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>作为一名准大四学生，暑假开始系统学习运维。第一步是在云上搞一台属于自己的 Linux 服务器。</p>
-<p>我选择了阿里云的学生优惠——**”学生专属算力包”**，有 850 元额度，对学习来说完全够用。</p>
-<h2 id="选型过程"><a href="#选型过程" class="headerlink" title="选型过程"></a>选型过程</h2><h3 id="学生认证"><a href="#学生认证" class="headerlink" title="学生认证"></a>学生认证</h3><p>之前阿里云学生认证过期了，重新验证了下，很快通过。</p>
-<h3 id="选哪个实例"><a href="#选哪个实例" class="headerlink" title="选哪个实例"></a>选哪个实例</h3><p>学生计划里有几个选项：</p>
-<ul>
-<li>e实例 2核2G</li>
-<li>轻量应用服务器 2核2G</li>
-<li>c7实例 2核4G</li>
-</ul>
-<p>最终选了 <strong>e实例 2核2G</strong>，因为：</p>
-<ol>
-<li>学生优惠覆盖，基本免费</li>
-<li>学习用足够了，后面不够再升配</li>
-</ol>
-<h3 id="选配置"><a href="#选配置" class="headerlink" title="选配置"></a>选配置</h3><p>可选规格中选了 ecs.e 系列，可用区选的是<strong>华东1（杭州）</strong>，地域离得近延迟低。</p>
-<p><strong>注意</strong>：系统盘默认 40G ESSD Entry，不支持变更，够用就行。</p>
-<h2 id="网络配置（踩坑）"><a href="#网络配置（踩坑）" class="headerlink" title="网络配置（踩坑）"></a>网络配置（踩坑）</h2><h3 id="专有网络-vs-公网IP"><a href="#专有网络-vs-公网IP" class="headerlink" title="专有网络 vs 公网IP"></a>专有网络 vs 公网IP</h3><p>购买页面默认只有专有网络和虚拟交换机选项，<strong>没有公网IP</strong>。一开始以为漏掉了什么配置。</p>
-<p>解决方案：先买实例，之后<strong>单独创建弹性公网 IP（EIP）</strong>再绑定。</p>
-<h3 id="EIP-创建"><a href="#EIP-创建" class="headerlink" title="EIP 创建"></a>EIP 创建</h3><p>创建弹性 IP 时几个关键选项：</p>
-<ul>
-<li><strong>防护类型</strong>：默认</li>
-<li><strong>地址池</strong>：默认</li>
-<li><strong>流量计费</strong>：按使用流量（省钱）</li>
-</ul>
-<h3 id="带宽选择"><a href="#带宽选择" class="headerlink" title="带宽选择"></a>带宽选择</h3><p>带宽选 3Mbps 后发现无法使用学生优惠券——改成<strong>按使用流量计费</strong>就好了，平时学习测试流量不大。</p>
-<h2 id="SSH-连接踩坑"><a href="#SSH-连接踩坑" class="headerlink" title="SSH 连接踩坑"></a>SSH 连接踩坑</h2><h3 id="Windows-上-SSH"><a href="#Windows-上-SSH" class="headerlink" title="Windows 上 SSH"></a>Windows 上 SSH</h3><p>Windows 上用 <strong>Git Bash</strong> 自带的 ssh 命令，不需要额外装。</p>
-<h3 id="PEM-密钥"><a href="#PEM-密钥" class="headerlink" title="PEM 密钥"></a>PEM 密钥</h3><p>阿里云生成密钥的时候下载了一个 <code>.pem</code> 文件。连接命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -i ~/.ssh/bing-key.pem root@47.99.166.175<br></code></pre></td></tr></table></figure>
+                <h2 id="进程管理：服务器上的”任务管理器”"><a href="#进程管理：服务器上的”任务管理器”" class="headerlink" title="进程管理：服务器上的”任务管理器”"></a>进程管理：服务器上的”任务管理器”</h2><p>每个运行中的程序都是一个<strong>进程</strong>。Nginx 是进程、Docker 是进程、你的 SSH 连接也是进程。</p>
+<h3 id="ps-—-查看进程"><a href="#ps-—-查看进程" class="headerlink" title="ps — 查看进程"></a>ps — 查看进程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ps aux<br></code></pre></td></tr></table></figure>
 
-<p><strong>第一个坑</strong>：路径写错了，<code>C:Users</code> 没有斜杠，应该用 <code>/c/Users/...</code> 这种 Unix 路径格式。</p>
-<p><strong>第二个坑</strong>：密钥权限太开放，需要在 Git Bash 里执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> 400 ~/.ssh/bing-key.pem<br></code></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>USER</td>
+<td>谁启动的</td>
+</tr>
+<tr>
+<td>PID</td>
+<td>进程 ID（唯一编号）</td>
+</tr>
+<tr>
+<td>%CPU</td>
+<td>CPU 占用</td>
+</tr>
+<tr>
+<td>%MEM</td>
+<td>内存占用</td>
+</tr>
+<tr>
+<td>STAT</td>
+<td>S&#x3D;睡眠 R&#x3D;运行 Z&#x3D;僵尸</td>
+</tr>
+</tbody></table>
+<p>在你的服务器上跑 <code>ps aux | grep nginx</code>，能看到：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arduino">nginx: master process    ← 主进程，负责管理<br>nginx: worker process    ← 工作进程，处理请求<br>nginx: worker process    ← 同上（多核就多个）<br></code></pre></td></tr></table></figure>
 
-<p>连上之后看到了熟悉的 Linux 欢迎界面，那一刻还是很开心的 😄</p>
-<h2 id="安全加固"><a href="#安全加固" class="headerlink" title="安全加固"></a>安全加固</h2><ol>
-<li>创建普通用户 <code>bing</code>，日常工作不用 root</li>
-<li>禁止 root SSH 登录：</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sed -i <span class="hljs-string">&#x27;s/^#PermitRootLogin yes/PermitRootLogin no/&#x27;</span> /etc/ssh/sshd_config<br></code></pre></td></tr></table></figure>
+<h3 id="top-htop-—-实时监控"><a href="#top-htop-—-实时监控" class="headerlink" title="top &#x2F; htop — 实时监控"></a>top &#x2F; htop — 实时监控</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">top       <span class="hljs-comment"># 自带，功能基础</span><br>htop      <span class="hljs-comment"># 需要装，彩色 + 鼠标可点 + 按 F9 杀进程</span><br></code></pre></td></tr></table></figure>
 
-<p><strong>关于 <code>^#</code> 的含义</strong>：<code>^#</code> 是正则表达式，表示行首的注释符 <code>#</code>。整句意思：找到被注释掉的 <code>PermitRootLogin yes</code>，改为 <code>PermitRootLogin no</code>。</p>
-<h2 id="Docker-安装踩坑"><a href="#Docker-安装踩坑" class="headerlink" title="Docker 安装踩坑"></a>Docker 安装踩坑</h2><h3 id="第一个坑：官方源被墙"><a href="#第一个坑：官方源被墙" class="headerlink" title="第一个坑：官方源被墙"></a>第一个坑：官方源被墙</h3><p>添加 Docker 官方源时报错：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">Curl <span class="hljs-built_in">error</span> (56): Failure when receiving data <span class="hljs-keyword">from</span> the<span class="hljs-built_in"> peer</span><br><span class="hljs-built_in"></span>OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 104<br></code></pre></td></tr></table></figure>
+<p><code>htop</code> 比 <code>top</code> 好太多，装上就不想用 top 了。</p>
+<h3 id="kill-—-给进程发信号"><a href="#kill-—-给进程发信号" class="headerlink" title="kill — 给进程发信号"></a>kill — 给进程发信号</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">kill</span> PID        <span class="hljs-comment"># 默认发 SIGTERM（礼貌请退出）</span><br><span class="hljs-built_in">kill</span> -9 PID     <span class="hljs-comment"># SIGKILL（强制杀掉，不给商量）</span><br></code></pre></td></tr></table></figure>
 
-<p>这是国内访问 Docker 官方源被墙的经典问题。</p>
-<p><strong>解决</strong>：换阿里云 Docker 镜像源，秒装成功。</p>
-<h3 id="第二个坑：Docker-Hub-拉镜像超时"><a href="#第二个坑：Docker-Hub-拉镜像超时" class="headerlink" title="第二个坑：Docker Hub 拉镜像超时"></a>第二个坑：Docker Hub 拉镜像超时</h3><figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs subunit">docker run hello-world<br><span class="hljs-keyword">Error </span>response from daemon: <br>  Get &quot;https://registry<span class="hljs-string">-1</span>.docker.io/v2/&quot;: <br>  net/http: request canceled while waiting for connection<br></code></pre></td></tr></table></figure>
-
-<p><strong>解决</strong>：配置 Docker 镜像加速器（阿里云容器镜像服务提供免费的加速地址）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">mkdir</span> -p /etc/docker<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/docker/daemon.json &lt;&lt;-<span class="hljs-string">&#x27;EOF&#x27;</span><br>&#123;<br>  <span class="hljs-string">&quot;registry-mirrors&quot;</span>: [<span class="hljs-string">&quot;https://&lt;你的阿里云加速地址&gt;.mirror.aliyuncs.com&quot;</span>]<br>&#125;<br>EOF<br><span class="hljs-built_in">sudo</span> systemctl daemon-reload<br><span class="hljs-built_in">sudo</span> systemctl restart docker<br></code></pre></td></tr></table></figure>
-
-<p>配好后 <code>docker run hello-world</code> 终于跑起来了 🎉</p>
-<h2 id="下一步计划"><a href="#下一步计划" class="headerlink" title="下一步计划"></a>下一步计划</h2><ul>
-<li><input disabled="" type="checkbox"> Nginx 安装配置</li>
-<li><input disabled="" type="checkbox"> Docker Compose </li>
-<li><input disabled="" type="checkbox"> 把博客部署到这台服务器上</li>
-<li><input disabled="" type="checkbox"> 监控告警</li>
-<li><input disabled="" type="checkbox"> CI&#x2F;CD</li>
-</ul>
+<p>有趣的是，<code>kill</code> 不是”杀掉”的意思，是”发信号”。你每天用的 <code>docker restart</code> 本质就是给容器进程发 SIGHUP 信号。</p>
 <hr>
+<h2 id="systemd-systemctl-—-管理后台服务"><a href="#systemd-systemctl-—-管理后台服务" class="headerlink" title="systemd &#x2F; systemctl — 管理后台服务"></a>systemd &#x2F; systemctl — 管理后台服务</h2><p>Linux 启动的第一个进程就是 systemd（PID&#x3D;1）。它负责启动和管理所有后台服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl status fail2ban    <span class="hljs-comment"># 看状态</span><br>systemctl is-enabled docker  <span class="hljs-comment"># 是否开机自启？</span><br></code></pre></td></tr></table></figure>
+
+<p>常用命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>systemctl status</code></td>
+<td>看运行状态</td>
+</tr>
+<tr>
+<td><code>systemctl start/stop/restart</code></td>
+<td>启&#x2F;停&#x2F;重启</td>
+</tr>
+<tr>
+<td><code>systemctl enable/disable</code></td>
+<td>开&#x2F;关 开机自启</td>
+</tr>
+</tbody></table>
+<p>你服务器上的服务层级：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">systemd（PID <span class="hljs-number">1</span>）<br>├── sshd       ← SSH 服务<br>├── fail<span class="hljs-symbol">2b</span>an   ← 防暴力破解<br>├── docker     ← Docker 引擎（自启）<br>├── cron       ← 定时任务<br>└── docker compose 管理<br>    ├── <span class="hljs-keyword">blog-nginx</span><br><span class="hljs-keyword"></span>    └── glances<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Nginx-日志分析脚本"><a href="#Nginx-日志分析脚本" class="headerlink" title="Nginx 日志分析脚本"></a>Nginx 日志分析脚本</h2><p>运维经常被问：”昨天有多少人访问？404 最多的页面是什么？有没有人在扫服务器？”</p>
+<p>写个脚本一键出报告：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br>LOG=$(docker logs blog-nginx 2&gt;&amp;1)<br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;总访问量: <span class="hljs-subst">$(echo <span class="hljs-string">&quot;<span class="hljs-variable">$LOG</span>&quot;</span> | grep -cE &#x27;GET|POST&#x27;)</span>&quot;</span><br><br><span class="hljs-comment"># 访问最多的 IP</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$LOG</span>&quot;</span> | grep -oP <span class="hljs-string">&#x27;^\d+\.\d+\.\d+\.\d+&#x27;</span> | <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span> -c | <span class="hljs-built_in">sort</span> -rn | <span class="hljs-built_in">head</span> -5<br><br><span class="hljs-comment"># 状态码分布</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$LOG</span>&quot;</span> | grep -E <span class="hljs-string">&#x27;&quot;GET|&quot;POST&#x27;</span> | awk <span class="hljs-string">&#x27;&#123;print $9&#125;&#x27;</span> | <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span> -c | <span class="hljs-built_in">sort</span> -rn<br><br><span class="hljs-comment"># 404 最多的页面</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$LOG</span>&quot;</span> | grep <span class="hljs-string">&#x27; 404 &#x27;</span> | awk <span class="hljs-string">&#x27;&#123;print $7&#125;&#x27;</span> | <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span> -c | <span class="hljs-built_in">sort</span> -rn | <span class="hljs-built_in">head</span> -5<br></code></pre></td></tr></table></figure>
+
+<p>跑出来的结果很有意思——有人在扫你的服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">/.env          ← 想偷环境变量<br>/.git/config   ← 想偷 Git 仓库<br></code></pre></td></tr></table></figure>
+
+<p>公网 IP 就是这样，每分钟都有人敲门。fail2ban 挡住了 SSH，Nginx 挡不住 HTTP 扫描，但这种低水平扫描也不用担心——要是你有个正式 HTTPS 证书 + 域名，对方都不知道你 IP。</p>
+<hr>
+<h2 id="Python-运维脚本"><a href="#Python-运维脚本" class="headerlink" title="Python 运维脚本"></a>Python 运维脚本</h2><p>Shell 脚本适合简单任务，逻辑一复杂就难读。Python 更适合写稍微复杂一点的脚本。</p>
+<h3 id="健康检查：Shell-→-Python"><a href="#健康检查：Shell-→-Python" class="headerlink" title="健康检查：Shell → Python"></a>健康检查：Shell → Python</h3><p>Shell 版：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">df</span> -h / | awk <span class="hljs-string">&#x27;NR==2&#123;print &quot;磁盘: &quot;$3&quot;/&quot;$2&quot; (&quot;$5&quot;)&quot;&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>Python 版：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br>result = os.popen(<span class="hljs-string">&quot;df -h /&quot;</span>).read()<br>data = result.split(<span class="hljs-string">&quot;\n&quot;</span>)[<span class="hljs-number">1</span>].split()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;磁盘: <span class="hljs-subst">&#123;data[<span class="hljs-number">2</span>]&#125;</span>/<span class="hljs-subst">&#123;data[<span class="hljs-number">1</span>]&#125;</span> (<span class="hljs-subst">&#123;data[<span class="hljs-number">4</span>]&#125;</span>)&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>同样的结果，但 Python 的变量名和 <code>f&quot;...&quot;</code> 格式化字符串比 Shell 可读太多。</p>
+<h3 id="网站监控脚本"><a href="#网站监控脚本" class="headerlink" title="网站监控脚本"></a>网站监控脚本</h3><p>用 Python 的 <code>requests</code> 库，几行代码就能定时检查网站是否活着：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests<br><br>urls = [<br>    (<span class="hljs-string">&quot;博客&quot;</span>, <span class="hljs-string">&quot;https://47.99.166.175&quot;</span>),<br>    (<span class="hljs-string">&quot;监控&quot;</span>, <span class="hljs-string">&quot;http://47.99.166.175:8080&quot;</span>),<br>    (<span class="hljs-string">&quot;GitHub&quot;</span>, <span class="hljs-string">&quot;https://github.com&quot;</span>),<br>]<br><br><span class="hljs-keyword">for</span> name, url <span class="hljs-keyword">in</span> urls:<br>    <span class="hljs-keyword">try</span>:<br>        r = requests.get(url, timeout=<span class="hljs-number">10</span>, verify=<span class="hljs-literal">False</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;✅ <span class="hljs-subst">&#123;name&#125;</span> HTTP <span class="hljs-subst">&#123;r.status_code&#125;</span>&quot;</span>)<br>    <span class="hljs-keyword">except</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;❌ <span class="hljs-subst">&#123;name&#125;</span> 挂了&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>加到 crontab，每 30 分钟自动跑一次：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">*<span class="hljs-string">/30</span> * * * * python3 ~<span class="hljs-string">/monitor.py</span> &gt;&gt; ~<span class="hljs-string">/monitor.log</span><br></code></pre></td></tr></table></figure>
+
+<p>现在你的自动化体系：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stata">cron 定时任务<br>├── 03:00  → backup.<span class="hljs-keyword">sh</span>      → 每日备份<br>├── 每30分 → monitor.py     → 网站监控<br>└── 手动   → check.<span class="hljs-keyword">sh</span>/<span class="hljs-keyword">log</span>-<span class="hljs-keyword">report</span>.<span class="hljs-keyword">sh</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><table>
+<thead>
+<tr>
+<th>学到什么</th>
+<th>命令&#x2F;工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>进程查看</td>
+<td><code>ps</code> <code>top</code> <code>htop</code></td>
+</tr>
+<tr>
+<td>进程控制</td>
+<td><code>kill</code> <code>kill -9</code></td>
+</tr>
+<tr>
+<td>服务管理</td>
+<td><code>systemctl start/stop/enable/status</code></td>
+</tr>
+<tr>
+<td>日志分析</td>
+<td><code>grep</code> <code>awk</code> <code>sort</code> <code>uniq -c</code></td>
+</tr>
+<tr>
+<td>Python 运维</td>
+<td><code>os.popen</code> <code>requests</code> <code>f-string</code></td>
+</tr>
+</tbody></table>
 <blockquote>
-<p>把踩过的坑记录下来，下次再遇到就不慌了。这就是运维的日常。</p>
+<p>Shell 做小事快，Python 做复杂事清楚。两个都会，运维日常就够用了。</p>
 </blockquote>
+<hr>
+<p><em><a target="_blank" rel="noopener" href="https://github.com/Bingsv/ops-portfolio">脚本源码</a></em></p>
 
                 
               </div>
@@ -481,15 +547,15 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" class="print-no-link">#阿里云</a>
-      
-        <a href="/tags/%E8%BF%90%E7%BB%B4/" class="print-no-link">#运维</a>
+        <a href="/tags/Shell/" class="print-no-link">#Shell</a>
       
         <a href="/tags/Linux/" class="print-no-link">#Linux</a>
       
-        <a href="/tags/ECS/" class="print-no-link">#ECS</a>
+        <a href="/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" class="print-no-link">#进程管理</a>
       
-        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/" class="print-no-link">#云计算</a>
+        <a href="/tags/systemd/" class="print-no-link">#systemd</a>
+      
+        <a href="/tags/Python/" class="print-no-link">#Python</a>
       
     </div>
   
@@ -501,8 +567,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>阿里云ECS从零搭建记录</div>
-      <div>https://bingsv.github.io/2026/06/27/阿里云ECS从零搭建记录/</div>
+      <div>进程管理与Python运维脚本入门</div>
+      <div>https://bingsv.github.io/2026/07/04/进程管理与Python运维脚本入门/</div>
     </div>
     <div class="license-meta">
       
@@ -514,7 +580,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年6月27日</div>
+          <div>2026年7月4日</div>
         </div>
       
       
@@ -546,15 +612,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/01/Shell%E8%84%9A%E6%9C%AC%E4%BB%8E%E9%9B%B6%E5%88%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" title="Shell脚本从零到自动化部署">
+                      <a href="/2026/07/07/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E4%B8%8EMySQL%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/" title="网络基础与MySQL快速上手">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Shell脚本从零到自动化部署</span>
+                        <span class="hidden-mobile">网络基础与MySQL快速上手</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2026/07/03/Docker%E8%BF%9B%E9%98%B6-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%95%9C%E5%83%8F%E4%B8%8E%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93/" title="Docker进阶-自定义镜像与镜像仓库">
+                        <span class="hidden-mobile">Docker进阶-自定义镜像与镜像仓库</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

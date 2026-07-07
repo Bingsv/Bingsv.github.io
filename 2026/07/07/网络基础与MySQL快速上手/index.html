@@ -19,26 +19,26 @@
   <meta name="author" content="Bingsv">
   <meta name="keywords" content="运维,Linux,Docker,云计算">
   
-    <meta name="description" content="背景作为一名准大四学生，暑假开始系统学习运维。第一步是在云上搞一台属于自己的 Linux 服务器。 我选择了阿里云的学生优惠——**”学生专属算力包”**，有 850 元额度，对学习来说完全够用。 选型过程学生认证之前阿里云学生认证过期了，重新验证了下，很快通过。 选哪个实例学生计划里有几个选项：  e实例 2核2G 轻量应用服务器 2核2G c7实例 2核4G  最终选了 e实例 2核2G，因为">
+    <meta name="description" content="网络基础运维每天和网络打交道——SSH 要用 TCP、配域名要用 DNS、排查不通要用端口测试。 TCP 三次握手建立连接前，客户端和服务器要确认双方都能收发： 123456789客户端                          服务器   │                               │   │──── SYN (我想连你) ──────────→│   第1次   │">
 <meta property="og:type" content="article">
-<meta property="og:title" content="阿里云ECS从零搭建记录">
-<meta property="og:url" content="https://bingsv.github.io/2026/06/27/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="网络基础与MySQL快速上手">
+<meta property="og:url" content="https://bingsv.github.io/2026/07/07/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E4%B8%8EMySQL%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/index.html">
 <meta property="og:site_name" content="Bingsv&#39;s Blog">
-<meta property="og:description" content="背景作为一名准大四学生，暑假开始系统学习运维。第一步是在云上搞一台属于自己的 Linux 服务器。 我选择了阿里云的学生优惠——**”学生专属算力包”**，有 850 元额度，对学习来说完全够用。 选型过程学生认证之前阿里云学生认证过期了，重新验证了下，很快通过。 选哪个实例学生计划里有几个选项：  e实例 2核2G 轻量应用服务器 2核2G c7实例 2核4G  最终选了 e实例 2核2G，因为">
+<meta property="og:description" content="网络基础运维每天和网络打交道——SSH 要用 TCP、配域名要用 DNS、排查不通要用端口测试。 TCP 三次握手建立连接前，客户端和服务器要确认双方都能收发： 123456789客户端                          服务器   │                               │   │──── SYN (我想连你) ──────────→│   第1次   │">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-06-26T17:06:13.000Z">
-<meta property="article:modified_time" content="2026-07-03T11:37:12.544Z">
+<meta property="article:published_time" content="2026-07-07T05:14:12.000Z">
+<meta property="article:modified_time" content="2026-07-07T05:14:54.610Z">
 <meta property="article:author" content="Bingsv">
-<meta property="article:tag" content="阿里云">
-<meta property="article:tag" content="运维">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="ECS">
-<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="TCP">
+<meta property="article:tag" content="DNS">
+<meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>阿里云ECS从零搭建记录 - Bingsv&#39;s Blog</title>
+  <title>网络基础与MySQL快速上手 - Bingsv&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -307,7 +307,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="阿里云ECS从零搭建记录"></span>
+            <span id="subtitle" data-typed-text="网络基础与MySQL快速上手"></span>
           
         </div>
 
@@ -318,8 +318,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-06-27 01:06" pubdate>
-          2026年6月27日 凌晨
+        <time datetime="2026-07-07 13:14" pubdate>
+          2026年7月7日 下午
         </time>
       </span>
     
@@ -330,7 +330,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          1.8k 字
         
       </span>
     
@@ -341,7 +341,7 @@
         
         
         
-          14 分钟
+          15 分钟
         
       </span>
     
@@ -380,74 +380,71 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">阿里云ECS从零搭建记录</h1>
+            <h1 id="seo-header">网络基础与MySQL快速上手</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>作为一名准大四学生，暑假开始系统学习运维。第一步是在云上搞一台属于自己的 Linux 服务器。</p>
-<p>我选择了阿里云的学生优惠——**”学生专属算力包”**，有 850 元额度，对学习来说完全够用。</p>
-<h2 id="选型过程"><a href="#选型过程" class="headerlink" title="选型过程"></a>选型过程</h2><h3 id="学生认证"><a href="#学生认证" class="headerlink" title="学生认证"></a>学生认证</h3><p>之前阿里云学生认证过期了，重新验证了下，很快通过。</p>
-<h3 id="选哪个实例"><a href="#选哪个实例" class="headerlink" title="选哪个实例"></a>选哪个实例</h3><p>学生计划里有几个选项：</p>
-<ul>
-<li>e实例 2核2G</li>
-<li>轻量应用服务器 2核2G</li>
-<li>c7实例 2核4G</li>
-</ul>
-<p>最终选了 <strong>e实例 2核2G</strong>，因为：</p>
-<ol>
-<li>学生优惠覆盖，基本免费</li>
-<li>学习用足够了，后面不够再升配</li>
-</ol>
-<h3 id="选配置"><a href="#选配置" class="headerlink" title="选配置"></a>选配置</h3><p>可选规格中选了 ecs.e 系列，可用区选的是<strong>华东1（杭州）</strong>，地域离得近延迟低。</p>
-<p><strong>注意</strong>：系统盘默认 40G ESSD Entry，不支持变更，够用就行。</p>
-<h2 id="网络配置（踩坑）"><a href="#网络配置（踩坑）" class="headerlink" title="网络配置（踩坑）"></a>网络配置（踩坑）</h2><h3 id="专有网络-vs-公网IP"><a href="#专有网络-vs-公网IP" class="headerlink" title="专有网络 vs 公网IP"></a>专有网络 vs 公网IP</h3><p>购买页面默认只有专有网络和虚拟交换机选项，<strong>没有公网IP</strong>。一开始以为漏掉了什么配置。</p>
-<p>解决方案：先买实例，之后<strong>单独创建弹性公网 IP（EIP）</strong>再绑定。</p>
-<h3 id="EIP-创建"><a href="#EIP-创建" class="headerlink" title="EIP 创建"></a>EIP 创建</h3><p>创建弹性 IP 时几个关键选项：</p>
-<ul>
-<li><strong>防护类型</strong>：默认</li>
-<li><strong>地址池</strong>：默认</li>
-<li><strong>流量计费</strong>：按使用流量（省钱）</li>
-</ul>
-<h3 id="带宽选择"><a href="#带宽选择" class="headerlink" title="带宽选择"></a>带宽选择</h3><p>带宽选 3Mbps 后发现无法使用学生优惠券——改成<strong>按使用流量计费</strong>就好了，平时学习测试流量不大。</p>
-<h2 id="SSH-连接踩坑"><a href="#SSH-连接踩坑" class="headerlink" title="SSH 连接踩坑"></a>SSH 连接踩坑</h2><h3 id="Windows-上-SSH"><a href="#Windows-上-SSH" class="headerlink" title="Windows 上 SSH"></a>Windows 上 SSH</h3><p>Windows 上用 <strong>Git Bash</strong> 自带的 ssh 命令，不需要额外装。</p>
-<h3 id="PEM-密钥"><a href="#PEM-密钥" class="headerlink" title="PEM 密钥"></a>PEM 密钥</h3><p>阿里云生成密钥的时候下载了一个 <code>.pem</code> 文件。连接命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -i ~/.ssh/bing-key.pem root@47.99.166.175<br></code></pre></td></tr></table></figure>
+                <h2 id="网络基础"><a href="#网络基础" class="headerlink" title="网络基础"></a>网络基础</h2><p>运维每天和网络打交道——SSH 要用 TCP、配域名要用 DNS、排查不通要用端口测试。</p>
+<h3 id="TCP-三次握手"><a href="#TCP-三次握手" class="headerlink" title="TCP 三次握手"></a>TCP 三次握手</h3><p>建立连接前，客户端和服务器要确认<strong>双方都能收发</strong>：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scss">客户端                          服务器<br>   │                               │<br>   │──── SYN (我想连你) ──────────→│   第<span class="hljs-number">1</span>次<br>   │                               │<br>   │←── SYN+ACK (收到，你呢) ──────│   第<span class="hljs-number">2</span>次<br>   │                               │<br>   │──── ACK (收到了，开聊) ──────→│   第<span class="hljs-number">3</span>次<br>   │                               │<br>   ╞══════ 连接建立 ═══════════════╡<br></code></pre></td></tr></table></figure>
 
-<p><strong>第一个坑</strong>：路径写错了，<code>C:Users</code> 没有斜杠，应该用 <code>/c/Users/...</code> 这种 Unix 路径格式。</p>
-<p><strong>第二个坑</strong>：密钥权限太开放，需要在 Git Bash 里执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> 400 ~/.ssh/bing-key.pem<br></code></pre></td></tr></table></figure>
+<p>面试官问”为什么是三次不是两次”——答：两次只能证明客户端能发、服务器能收；服务器不知道客户端能不能收。第三次确认客户端收到了服务器的回应。</p>
+<h3 id="在自己服务器上看"><a href="#在自己服务器上看" class="headerlink" title="在自己服务器上看"></a>在自己服务器上看</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ss -t | awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> | <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span> -c<br></code></pre></td></tr></table></figure>
 
-<p>连上之后看到了熟悉的 Linux 欢迎界面，那一刻还是很开心的 😄</p>
-<h2 id="安全加固"><a href="#安全加固" class="headerlink" title="安全加固"></a>安全加固</h2><ol>
-<li>创建普通用户 <code>bing</code>，日常工作不用 root</li>
-<li>禁止 root SSH 登录：</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sed -i <span class="hljs-string">&#x27;s/^#PermitRootLogin yes/PermitRootLogin no/&#x27;</span> /etc/ssh/sshd_config<br></code></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">3 </span>ESTAB     ← <span class="hljs-number">3</span> 个已建立的连接<br><span class="hljs-symbol">1 </span>State     ← 表头<br></code></pre></td></tr></table></figure>
 
-<p><strong>关于 <code>^#</code> 的含义</strong>：<code>^#</code> 是正则表达式，表示行首的注释符 <code>#</code>。整句意思：找到被注释掉的 <code>PermitRootLogin yes</code>，改为 <code>PermitRootLogin no</code>。</p>
-<h2 id="Docker-安装踩坑"><a href="#Docker-安装踩坑" class="headerlink" title="Docker 安装踩坑"></a>Docker 安装踩坑</h2><h3 id="第一个坑：官方源被墙"><a href="#第一个坑：官方源被墙" class="headerlink" title="第一个坑：官方源被墙"></a>第一个坑：官方源被墙</h3><p>添加 Docker 官方源时报错：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">Curl <span class="hljs-built_in">error</span> (56): Failure when receiving data <span class="hljs-keyword">from</span> the<span class="hljs-built_in"> peer</span><br><span class="hljs-built_in"></span>OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 104<br></code></pre></td></tr></table></figure>
+<p><code>ss</code> 是 <code>netstat</code> 的替代品，更快更现代。<code>ESTAB</code> &#x3D; 连接中，<code>LISTEN</code> &#x3D; 在监听，<code>TIME-WAIT</code> &#x3D; 刚关闭还在等。</p>
+<h3 id="DNS-解析"><a href="#DNS-解析" class="headerlink" title="DNS 解析"></a>DNS 解析</h3><p>把域名翻译成 IP：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">nslookup github.com<br><span class="hljs-comment"># Name: github.com → Address: 20.205.243.166</span><br></code></pre></td></tr></table></figure>
 
-<p>这是国内访问 Docker 官方源被墙的经典问题。</p>
-<p><strong>解决</strong>：换阿里云 Docker 镜像源，秒装成功。</p>
-<h3 id="第二个坑：Docker-Hub-拉镜像超时"><a href="#第二个坑：Docker-Hub-拉镜像超时" class="headerlink" title="第二个坑：Docker Hub 拉镜像超时"></a>第二个坑：Docker Hub 拉镜像超时</h3><figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs subunit">docker run hello-world<br><span class="hljs-keyword">Error </span>response from daemon: <br>  Get &quot;https://registry<span class="hljs-string">-1</span>.docker.io/v2/&quot;: <br>  net/http: request canceled while waiting for connection<br></code></pre></td></tr></table></figure>
+<p>服务器上 <code>/etc/resolv.conf</code> 存了 DNS 服务器地址：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">nameserver</span> <span class="hljs-number">100.100.2.136</span>   ← 阿里云内网 DNS<br></code></pre></td></tr></table></figure>
 
-<p><strong>解决</strong>：配置 Docker 镜像加速器（阿里云容器镜像服务提供免费的加速地址）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">mkdir</span> -p /etc/docker<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/docker/daemon.json &lt;&lt;-<span class="hljs-string">&#x27;EOF&#x27;</span><br>&#123;<br>  <span class="hljs-string">&quot;registry-mirrors&quot;</span>: [<span class="hljs-string">&quot;https://&lt;你的阿里云加速地址&gt;.mirror.aliyuncs.com&quot;</span>]<br>&#125;<br>EOF<br><span class="hljs-built_in">sudo</span> systemctl daemon-reload<br><span class="hljs-built_in">sudo</span> systemctl restart docker<br></code></pre></td></tr></table></figure>
-
-<p>配好后 <code>docker run hello-world</code> 终于跑起来了 🎉</p>
-<h2 id="下一步计划"><a href="#下一步计划" class="headerlink" title="下一步计划"></a>下一步计划</h2><ul>
-<li><input disabled="" type="checkbox"> Nginx 安装配置</li>
-<li><input disabled="" type="checkbox"> Docker Compose </li>
-<li><input disabled="" type="checkbox"> 把博客部署到这台服务器上</li>
-<li><input disabled="" type="checkbox"> 监控告警</li>
-<li><input disabled="" type="checkbox"> CI&#x2F;CD</li>
-</ul>
-<hr>
 <blockquote>
-<p>把踩过的坑记录下来，下次再遇到就不慌了。这就是运维的日常。</p>
+<p>这就是为什么 GitHub 在国内 ping 不通但翻墙能访问——DNS 解析出的 IP 被墙了。</p>
 </blockquote>
+<h3 id="端口测试"><a href="#端口测试" class="headerlink" title="端口测试"></a>端口测试</h3><p>测试一个端口通不通，用 <code>nc</code>（netcat）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">nc -zv 47.99.166.175 443    <span class="hljs-comment"># ✅ Connection succeeded</span><br>nc -zv 47.99.166.175 3306   <span class="hljs-comment"># ❌ TIMEOUT</span><br></code></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>测什么</th>
+<th>什么情况用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ping</code></td>
+<td>ICMP 协议</td>
+<td>测延迟，但通了不代表服务活着</td>
+</tr>
+<tr>
+<td><code>nc -zv</code></td>
+<td>TCP 端口</td>
+<td>测端口通不通，这个通才是真的通</td>
+</tr>
+<tr>
+<td><code>curl -v</code></td>
+<td>HTTP&#x2F;HTTPS</td>
+<td>看完整请求响应过程</td>
+</tr>
+</tbody></table>
+<h3 id="双层防火墙"><a href="#双层防火墙" class="headerlink" title="双层防火墙"></a>双层防火墙</h3><p>云服务器通常有两层防火墙：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">互联网 → 阿里云安全组（第一层）→ 服务器 iptables（第二层）→ 你的应用<br></code></pre></td></tr></table></figure>
+
+<p>安全组 3306 没开 → <code>nc 3306</code> 超时。开了 443 → 浏览器能访问博客。</p>
+<hr>
+<h2 id="MySQL-快速上手"><a href="#MySQL-快速上手" class="headerlink" title="MySQL 快速上手"></a>MySQL 快速上手</h2><h3 id="用-Docker-一行跑起来"><a href="#用-Docker-一行跑起来" class="headerlink" title="用 Docker 一行跑起来"></a>用 Docker 一行跑起来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d --name mysql-learn \<br>  -p 3306:3306 \<br>  -e MYSQL_ROOT_PASSWORD=Admin@123 \<br>  -e MYSQL_DATABASE=opsdb \<br>  mysql:8.0<br></code></pre></td></tr></table></figure>
+
+<h3 id="基本-CRUD-操作"><a href="#基本-CRUD-操作" class="headerlink" title="基本 CRUD 操作"></a>基本 CRUD 操作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 建表</span><br><span class="hljs-keyword">CREATE TABLE</span> servers (<br>    id <span class="hljs-type">INT</span> AUTO_INCREMENT <span class="hljs-keyword">PRIMARY KEY</span>,<br>    name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>),<br>    ip <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>),<br>    status <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>)<br>);<br><br><span class="hljs-comment">-- 插入数据</span><br><span class="hljs-keyword">INSERT INTO</span> servers (name, ip, status) <span class="hljs-keyword">VALUES</span><br>    (<span class="hljs-string">&#x27;博客服务器&#x27;</span>, <span class="hljs-string">&#x27;47.99.166.175&#x27;</span>, <span class="hljs-string">&#x27;运行中&#x27;</span>),<br>    (<span class="hljs-string">&#x27;测试服务器&#x27;</span>, <span class="hljs-string">&#x27;10.0.0.1&#x27;</span>, <span class="hljs-string">&#x27;已下线&#x27;</span>);<br><br><span class="hljs-comment">-- 查询</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> servers;<br><span class="hljs-keyword">SELECT</span> name, ip <span class="hljs-keyword">FROM</span> servers <span class="hljs-keyword">WHERE</span> status <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;运行中&#x27;</span>;<br><br><span class="hljs-comment">-- 更新</span><br><span class="hljs-keyword">UPDATE</span> servers <span class="hljs-keyword">SET</span> status <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;已下线&#x27;</span> <span class="hljs-keyword">WHERE</span> name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;测试服务器&#x27;</span>;<br><br><span class="hljs-comment">-- 删除</span><br><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> servers <span class="hljs-keyword">WHERE</span> name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;测试服务器&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="进入-MySQL-容器的两种方式"><a href="#进入-MySQL-容器的两种方式" class="headerlink" title="进入 MySQL 容器的两种方式"></a>进入 MySQL 容器的两种方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 方式 1：直接连</span><br>docker <span class="hljs-built_in">exec</span> -it mysql-learn mysql -uroot -pAdmin@123 opsdb<br><br><span class="hljs-comment"># 方式 2：进容器再连</span><br>docker <span class="hljs-built_in">exec</span> -it mysql-learn bash<br>mysql -uroot -pAdmin@123 opsdb<br></code></pre></td></tr></table></figure>
+
+<hr>
+<p>运维不一定需要精通 SQL，但至少要会<strong>装数据库</strong>、<strong>连进去</strong>、<strong>查数据</strong>。面试时被问到”用过数据库吗”，能说”我自己在服务器上用 Docker 跑了一个 MySQL，基本的增删改查都会”。</p>
 
                 
               </div>
@@ -481,15 +478,15 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" class="print-no-link">#阿里云</a>
+        <a href="/tags/Docker/" class="print-no-link">#Docker</a>
       
-        <a href="/tags/%E8%BF%90%E7%BB%B4/" class="print-no-link">#运维</a>
+        <a href="/tags/%E7%BD%91%E7%BB%9C/" class="print-no-link">#网络</a>
       
-        <a href="/tags/Linux/" class="print-no-link">#Linux</a>
+        <a href="/tags/TCP/" class="print-no-link">#TCP</a>
       
-        <a href="/tags/ECS/" class="print-no-link">#ECS</a>
+        <a href="/tags/DNS/" class="print-no-link">#DNS</a>
       
-        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/" class="print-no-link">#云计算</a>
+        <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
       
     </div>
   
@@ -501,8 +498,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>阿里云ECS从零搭建记录</div>
-      <div>https://bingsv.github.io/2026/06/27/阿里云ECS从零搭建记录/</div>
+      <div>网络基础与MySQL快速上手</div>
+      <div>https://bingsv.github.io/2026/07/07/网络基础与MySQL快速上手/</div>
     </div>
     <div class="license-meta">
       
@@ -514,7 +511,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年6月27日</div>
+          <div>2026年7月7日</div>
         </div>
       
       
@@ -546,15 +543,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/01/Shell%E8%84%9A%E6%9C%AC%E4%BB%8E%E9%9B%B6%E5%88%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" title="Shell脚本从零到自动化部署">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Shell脚本从零到自动化部署</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2026/07/04/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B8%8EPython%E8%BF%90%E7%BB%B4%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8/" title="进程管理与Python运维脚本入门">
+                        <span class="hidden-mobile">进程管理与Python运维脚本入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
