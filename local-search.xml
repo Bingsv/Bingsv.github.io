@@ -119,13 +119,13 @@
     
     <tags>
       
-      <tag>CI/CD</tag>
-      
-      <tag>GitHub Actions</tag>
+      <tag>运维</tag>
       
       <tag>自动化</tag>
       
-      <tag>运维</tag>
+      <tag>CI/CD</tag>
+      
+      <tag>GitHub Actions</tag>
       
       <tag>DevOps</tag>
       
@@ -152,11 +152,11 @@
     
     <tags>
       
-      <tag>自动化</tag>
+      <tag>Shell</tag>
       
       <tag>运维</tag>
       
-      <tag>Shell</tag>
+      <tag>自动化</tag>
       
       <tag>Linux</tag>
       
@@ -185,9 +185,9 @@
     
     <tags>
       
-      <tag>运维</tag>
-      
       <tag>阿里云</tag>
+      
+      <tag>运维</tag>
       
       <tag>Linux</tag>
       
