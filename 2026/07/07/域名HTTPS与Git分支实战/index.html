@@ -19,26 +19,26 @@
   <meta name="author" content="Bingsv">
   <meta name="keywords" content="运维,Linux,Docker,云计算">
   
-    <meta name="description" content="网络基础运维每天和网络打交道——SSH 要用 TCP、配域名要用 DNS、排查不通要用端口测试。 TCP 三次握手建立连接前，客户端和服务器要确认双方都能收发： 123456789客户端                          服务器   │                               │   │──── SYN (我想连你) ──────────→│   第1次   │">
+    <meta name="description" content="终于有域名了买了 bi-ng.top，首年几块钱。不用再给人看 47.99.166.175 这种裸 IP 了。 DNS 解析配置阿里云域名解析 → 添加两条 CNAME 记录：    记录类型 主机记录 记录值    CNAME @ Bingsv.github.io   CNAME www Bingsv.github.io   @ 代表域名本身 bi-ng.top，www 代表 www.bi-ng">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络基础与MySQL快速上手">
-<meta property="og:url" content="https://bingsv.github.io/2026/07/07/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E4%B8%8EMySQL%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/index.html">
+<meta property="og:title" content="域名HTTPS与Git分支实战">
+<meta property="og:url" content="https://bingsv.github.io/2026/07/07/%E5%9F%9F%E5%90%8DHTTPS%E4%B8%8EGit%E5%88%86%E6%94%AF%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="Bingsv&#39;s Blog">
-<meta property="og:description" content="网络基础运维每天和网络打交道——SSH 要用 TCP、配域名要用 DNS、排查不通要用端口测试。 TCP 三次握手建立连接前，客户端和服务器要确认双方都能收发： 123456789客户端                          服务器   │                               │   │──── SYN (我想连你) ──────────→│   第1次   │">
+<meta property="og:description" content="终于有域名了买了 bi-ng.top，首年几块钱。不用再给人看 47.99.166.175 这种裸 IP 了。 DNS 解析配置阿里云域名解析 → 添加两条 CNAME 记录：    记录类型 主机记录 记录值    CNAME @ Bingsv.github.io   CNAME www Bingsv.github.io   @ 代表域名本身 bi-ng.top，www 代表 www.bi-ng">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-07-07T05:14:12.000Z">
-<meta property="article:modified_time" content="2026-07-07T05:14:54.610Z">
+<meta property="article:published_time" content="2026-07-07T14:00:40.000Z">
+<meta property="article:modified_time" content="2026-07-07T14:01:17.663Z">
 <meta property="article:author" content="Bingsv">
-<meta property="article:tag" content="Docker">
-<meta property="article:tag" content="网络">
-<meta property="article:tag" content="TCP">
-<meta property="article:tag" content="DNS">
-<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="systemd">
+<meta property="article:tag" content="域名">
+<meta property="article:tag" content="HTTPS">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="GitHub Pages">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>网络基础与MySQL快速上手 - Bingsv&#39;s Blog</title>
+  <title>域名HTTPS与Git分支实战 - Bingsv&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -307,7 +307,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="网络基础与MySQL快速上手"></span>
+            <span id="subtitle" data-typed-text="域名HTTPS与Git分支实战"></span>
           
         </div>
 
@@ -318,8 +318,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-07-07 13:14" pubdate>
-          2026年7月7日 下午
+        <time datetime="2026-07-07 22:00" pubdate>
+          2026年7月7日 晚上
         </time>
       </span>
     
@@ -330,7 +330,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          1.7k 字
         
       </span>
     
@@ -380,71 +380,144 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">网络基础与MySQL快速上手</h1>
+            <h1 id="seo-header">域名HTTPS与Git分支实战</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="网络基础"><a href="#网络基础" class="headerlink" title="网络基础"></a>网络基础</h2><p>运维每天和网络打交道——SSH 要用 TCP、配域名要用 DNS、排查不通要用端口测试。</p>
-<h3 id="TCP-三次握手"><a href="#TCP-三次握手" class="headerlink" title="TCP 三次握手"></a>TCP 三次握手</h3><p>建立连接前，客户端和服务器要确认<strong>双方都能收发</strong>：</p>
-<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scss">客户端                          服务器<br>   │                               │<br>   │──── SYN (我想连你) ──────────→│   第<span class="hljs-number">1</span>次<br>   │                               │<br>   │←── SYN+ACK (收到，你呢) ──────│   第<span class="hljs-number">2</span>次<br>   │                               │<br>   │──── ACK (收到了，开聊) ──────→│   第<span class="hljs-number">3</span>次<br>   │                               │<br>   ╞══════ 连接建立 ═══════════════╡<br></code></pre></td></tr></table></figure>
+                <h2 id="终于有域名了"><a href="#终于有域名了" class="headerlink" title="终于有域名了"></a>终于有域名了</h2><p>买了 <code>bi-ng.top</code>，首年几块钱。不用再给人看 <code>47.99.166.175</code> 这种裸 IP 了。</p>
+<h3 id="DNS-解析配置"><a href="#DNS-解析配置" class="headerlink" title="DNS 解析配置"></a>DNS 解析配置</h3><p>阿里云域名解析 → 添加两条 CNAME 记录：</p>
+<table>
+<thead>
+<tr>
+<th>记录类型</th>
+<th>主机记录</th>
+<th>记录值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CNAME</td>
+<td>@</td>
+<td>Bingsv.github.io</td>
+</tr>
+<tr>
+<td>CNAME</td>
+<td>www</td>
+<td>Bingsv.github.io</td>
+</tr>
+</tbody></table>
+<p><code>@</code> 代表域名本身 <code>bi-ng.top</code>，<code>www</code> 代表 <code>www.bi-ng.top</code>。两条 CNAME 把这两个都指向 GitHub Pages。</p>
+<h3 id="GitHub-Pages-配置"><a href="#GitHub-Pages-配置" class="headerlink" title="GitHub Pages 配置"></a>GitHub Pages 配置</h3><p>仓库 Settings → Pages → Custom domain 填 <code>bi-ng.top</code> → Save → 勾选 Enforce HTTPS。</p>
+<p>等 1-2 分钟，GitHub 自动签发 Let’s Encrypt 证书，浏览器访问 <code>https://bi-ng.top</code> → 绿锁 🔒。</p>
+<h3 id="自签名-vs-正式证书"><a href="#自签名-vs-正式证书" class="headerlink" title="自签名 vs 正式证书"></a>自签名 vs 正式证书</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>自签名 (ECS)</th>
+<th>正式证书 (GitHub Pages)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>加密</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>浏览器信任</td>
+<td>❌ 红锁</td>
+<td>✅ 绿锁</td>
+</tr>
+<tr>
+<td>费用</td>
+<td>免费</td>
+<td>免费</td>
+</tr>
+<tr>
+<td>需要域名</td>
+<td>不需要</td>
+<td>需要</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="Git-分支实操"><a href="#Git-分支实操" class="headerlink" title="Git 分支实操"></a>Git 分支实操</h2><p>之前只有一个 <code>master</code> 分支。在真实项目里，改东西不走 master——在分支里改，改好了再合并。</p>
+<h3 id="完整流程"><a href="#完整流程" class="headerlink" title="完整流程"></a>完整流程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">git branch draft/fix-title       <span class="hljs-comment"># 1. 创建分支</span><br>git checkout draft/fix-title     <span class="hljs-comment"># 2. 切换到分支</span><br><br><span class="hljs-comment"># 在分支里安心改代码...</span><br><br>git commit -m <span class="hljs-string">&quot;修了个 bug&quot;</span>       <span class="hljs-comment"># 3. 提交</span><br>git checkout master              <span class="hljs-comment"># 4. 切回 master</span><br>git merge draft/fix-title        <span class="hljs-comment"># 5. 合并</span><br>git branch -d draft/fix-title    <span class="hljs-comment"># 6. 删掉用完的分支</span><br></code></pre></td></tr></table></figure>
 
-<p>面试官问”为什么是三次不是两次”——答：两次只能证明客户端能发、服务器能收；服务器不知道客户端能不能收。第三次确认客户端收到了服务器的回应。</p>
-<h3 id="在自己服务器上看"><a href="#在自己服务器上看" class="headerlink" title="在自己服务器上看"></a>在自己服务器上看</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ss -t | awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> | <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span> -c<br></code></pre></td></tr></table></figure>
+<h3 id="为什么这么干"><a href="#为什么这么干" class="headerlink" title="为什么这么干"></a>为什么这么干</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs crmsh"><span class="hljs-keyword">master</span> <span class="hljs-title">────────────────────────────→ 永远稳定</span><br><span class="hljs-title">            ↘                 ↗</span><br><span class="hljs-title">           draft</span>/fix-title ──→ 在这改，改坏了不影响 <span class="hljs-literal">master</span><br></code></pre></td></tr></table></figure>
 
-<p>输出：</p>
-<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">3 </span>ESTAB     ← <span class="hljs-number">3</span> 个已建立的连接<br><span class="hljs-symbol">1 </span>State     ← 表头<br></code></pre></td></tr></table></figure>
-
-<p><code>ss</code> 是 <code>netstat</code> 的替代品，更快更现代。<code>ESTAB</code> &#x3D; 连接中，<code>LISTEN</code> &#x3D; 在监听，<code>TIME-WAIT</code> &#x3D; 刚关闭还在等。</p>
-<h3 id="DNS-解析"><a href="#DNS-解析" class="headerlink" title="DNS 解析"></a>DNS 解析</h3><p>把域名翻译成 IP：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">nslookup github.com<br><span class="hljs-comment"># Name: github.com → Address: 20.205.243.166</span><br></code></pre></td></tr></table></figure>
-
-<p>服务器上 <code>/etc/resolv.conf</code> 存了 DNS 服务器地址：</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">nameserver</span> <span class="hljs-number">100.100.2.136</span>   ← 阿里云内网 DNS<br></code></pre></td></tr></table></figure>
-
-<blockquote>
-<p>这就是为什么 GitHub 在国内 ping 不通但翻墙能访问——DNS 解析出的 IP 被墙了。</p>
-</blockquote>
-<h3 id="端口测试"><a href="#端口测试" class="headerlink" title="端口测试"></a>端口测试</h3><p>测试一个端口通不通，用 <code>nc</code>（netcat）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">nc -zv 47.99.166.175 443    <span class="hljs-comment"># ✅ Connection succeeded</span><br>nc -zv 47.99.166.175 3306   <span class="hljs-comment"># ❌ TIMEOUT</span><br></code></pre></td></tr></table></figure>
+<p>团队里每个人都在自己分支干活，互相不干扰。merge 时有冲突再解决。</p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>git branch 分支名</code></td>
+<td>创建分支</td>
+</tr>
+<tr>
+<td><code>git checkout 分支名</code></td>
+<td>切换分支</td>
+</tr>
+<tr>
+<td><code>git checkout -b 分支名</code></td>
+<td>创建 + 切换</td>
+</tr>
+<tr>
+<td><code>git merge 分支名</code></td>
+<td>合并到当前分支</td>
+</tr>
+<tr>
+<td><code>git branch -d 分支名</code></td>
+<td>删除分支</td>
+</tr>
+<tr>
+<td><code>git branch -a</code></td>
+<td>查看所有分支</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="给监控脚本写-systemd-服务"><a href="#给监控脚本写-systemd-服务" class="headerlink" title="给监控脚本写 systemd 服务"></a>给监控脚本写 systemd 服务</h2><p>之前 Python 监控脚本 <code>monitor.py</code> 靠 cron 每 30 分钟跑一次。但万一服务器重启了，它不会自动恢复（cron 只管定时触发）。</p>
+<p>写一个 systemd 服务文件 <code>/etc/systemd/system/monitor.service</code>：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Unit]</span><br><span class="hljs-attr">Description</span>=网站可用性监控<br><span class="hljs-attr">After</span>=network.target docker.service<br><br><span class="hljs-section">[Service]</span><br><span class="hljs-attr">Type</span>=simple<br><span class="hljs-attr">User</span>=bing<br><span class="hljs-attr">ExecStart</span>=/usr/bin/python3 /home/bing/monitor.py<br><span class="hljs-attr">Restart</span>=<span class="hljs-literal">on</span>-failure<br><span class="hljs-attr">RestartSec</span>=<span class="hljs-number">60</span><br><br><span class="hljs-section">[Install]</span><br><span class="hljs-attr">WantedBy</span>=multi-user.target<br></code></pre></td></tr></table></figure>
 
 <table>
 <thead>
 <tr>
-<th>工具</th>
-<th>测什么</th>
-<th>什么情况用</th>
+<th>字段</th>
+<th>含义</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>ping</code></td>
-<td>ICMP 协议</td>
-<td>测延迟，但通了不代表服务活着</td>
+<td><code>After=network.target</code></td>
+<td>等网络就绪再启动</td>
 </tr>
 <tr>
-<td><code>nc -zv</code></td>
-<td>TCP 端口</td>
-<td>测端口通不通，这个通才是真的通</td>
+<td><code>Restart=on-failure</code></td>
+<td>异常退出自动重启</td>
 </tr>
 <tr>
-<td><code>curl -v</code></td>
-<td>HTTP&#x2F;HTTPS</td>
-<td>看完整请求响应过程</td>
+<td><code>RestartSec=60</code></td>
+<td>挂了等 60 秒再拉起来</td>
+</tr>
+<tr>
+<td><code>WantedBy=multi-user.target</code></td>
+<td>开机自动启动</td>
 </tr>
 </tbody></table>
-<h3 id="双层防火墙"><a href="#双层防火墙" class="headerlink" title="双层防火墙"></a>双层防火墙</h3><p>云服务器通常有两层防火墙：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">互联网 → 阿里云安全组（第一层）→ 服务器 iptables（第二层）→ 你的应用<br></code></pre></td></tr></table></figure>
-
-<p>安全组 3306 没开 → <code>nc 3306</code> 超时。开了 443 → 浏览器能访问博客。</p>
-<hr>
-<h2 id="MySQL-快速上手"><a href="#MySQL-快速上手" class="headerlink" title="MySQL 快速上手"></a>MySQL 快速上手</h2><h3 id="用-Docker-一行跑起来"><a href="#用-Docker-一行跑起来" class="headerlink" title="用 Docker 一行跑起来"></a>用 Docker 一行跑起来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d --name mysql-learn \<br>  -p 3306:3306 \<br>  -e MYSQL_ROOT_PASSWORD=Admin@123 \<br>  -e MYSQL_DATABASE=opsdb \<br>  mysql:8.0<br></code></pre></td></tr></table></figure>
-
-<h3 id="基本-CRUD-操作"><a href="#基本-CRUD-操作" class="headerlink" title="基本 CRUD 操作"></a>基本 CRUD 操作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 建表</span><br><span class="hljs-keyword">CREATE TABLE</span> servers (<br>    id <span class="hljs-type">INT</span> AUTO_INCREMENT <span class="hljs-keyword">PRIMARY KEY</span>,<br>    name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>),<br>    ip <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>),<br>    status <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>)<br>);<br><br><span class="hljs-comment">-- 插入数据</span><br><span class="hljs-keyword">INSERT INTO</span> servers (name, ip, status) <span class="hljs-keyword">VALUES</span><br>    (<span class="hljs-string">&#x27;博客服务器&#x27;</span>, <span class="hljs-string">&#x27;47.99.166.175&#x27;</span>, <span class="hljs-string">&#x27;运行中&#x27;</span>),<br>    (<span class="hljs-string">&#x27;测试服务器&#x27;</span>, <span class="hljs-string">&#x27;10.0.0.1&#x27;</span>, <span class="hljs-string">&#x27;已下线&#x27;</span>);<br><br><span class="hljs-comment">-- 查询</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> servers;<br><span class="hljs-keyword">SELECT</span> name, ip <span class="hljs-keyword">FROM</span> servers <span class="hljs-keyword">WHERE</span> status <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;运行中&#x27;</span>;<br><br><span class="hljs-comment">-- 更新</span><br><span class="hljs-keyword">UPDATE</span> servers <span class="hljs-keyword">SET</span> status <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;已下线&#x27;</span> <span class="hljs-keyword">WHERE</span> name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;测试服务器&#x27;</span>;<br><br><span class="hljs-comment">-- 删除</span><br><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> servers <span class="hljs-keyword">WHERE</span> name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;测试服务器&#x27;</span>;<br></code></pre></td></tr></table></figure>
-
-<h3 id="进入-MySQL-容器的两种方式"><a href="#进入-MySQL-容器的两种方式" class="headerlink" title="进入 MySQL 容器的两种方式"></a>进入 MySQL 容器的两种方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 方式 1：直接连</span><br>docker <span class="hljs-built_in">exec</span> -it mysql-learn mysql -uroot -pAdmin@123 opsdb<br><br><span class="hljs-comment"># 方式 2：进容器再连</span><br>docker <span class="hljs-built_in">exec</span> -it mysql-learn bash<br>mysql -uroot -pAdmin@123 opsdb<br></code></pre></td></tr></table></figure>
+<p>然后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> systemctl daemon-reload<br><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> --now monitor<br>systemctl status monitor<br></code></pre></td></tr></table></figure>
 
 <hr>
-<p>运维不一定需要精通 SQL，但至少要会<strong>装数据库</strong>、<strong>连进去</strong>、<strong>查数据</strong>。面试时被问到”用过数据库吗”，能说”我自己在服务器上用 Docker 跑了一个 MySQL，基本的增删改查都会”。</p>
+<h2 id="现在你的服务管理体系"><a href="#现在你的服务管理体系" class="headerlink" title="现在你的服务管理体系"></a>现在你的服务管理体系</h2><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs smali">systemd（开机自启）<br>├── sshd<br>├── docker<br>├── fail2ban<br>├── cron<br>└──<span class="hljs-built_in"> monitor </span>     ← 今天加的<br><br>docker compose（容器化）<br>├── blog-nginx<br>└── glances<br></code></pre></td></tr></table></figure>
+
+<p>一个是 Linux 原生服务管理，一个是容器编排，各管各的，互不冲突。</p>
+<hr>
+<p>今天还装了个 MySQL，用 Docker 一行跑起来，建库建表增删改查都通了。这些零散技能加起来，运维日常基本覆盖了。</p>
+<blockquote>
+<p>从裸 IP 到 HTTPS 域名，从单分支到分支工作流，从手动脚本到 systemd 服务——看不见的进步，在细节里。</p>
+</blockquote>
 
                 
               </div>
@@ -478,15 +551,15 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Docker/" class="print-no-link">#Docker</a>
+        <a href="/tags/systemd/" class="print-no-link">#systemd</a>
       
-        <a href="/tags/%E7%BD%91%E7%BB%9C/" class="print-no-link">#网络</a>
+        <a href="/tags/%E5%9F%9F%E5%90%8D/" class="print-no-link">#域名</a>
       
-        <a href="/tags/TCP/" class="print-no-link">#TCP</a>
+        <a href="/tags/HTTPS/" class="print-no-link">#HTTPS</a>
       
-        <a href="/tags/DNS/" class="print-no-link">#DNS</a>
+        <a href="/tags/Git/" class="print-no-link">#Git</a>
       
-        <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
+        <a href="/tags/GitHub-Pages/" class="print-no-link">#GitHub Pages</a>
       
     </div>
   
@@ -498,8 +571,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>网络基础与MySQL快速上手</div>
-      <div>https://bingsv.github.io/2026/07/07/网络基础与MySQL快速上手/</div>
+      <div>域名HTTPS与Git分支实战</div>
+      <div>https://bingsv.github.io/2026/07/07/域名HTTPS与Git分支实战/</div>
     </div>
     <div class="license-meta">
       
@@ -543,18 +616,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/07/%E5%9F%9F%E5%90%8DHTTPS%E4%B8%8EGit%E5%88%86%E6%94%AF%E5%AE%9E%E6%88%98/" title="域名HTTPS与Git分支实战">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">域名HTTPS与Git分支实战</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/04/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B8%8EPython%E8%BF%90%E7%BB%B4%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8/" title="进程管理与Python运维脚本入门">
-                        <span class="hidden-mobile">进程管理与Python运维脚本入门</span>
+                      <a href="/2026/07/07/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E4%B8%8EMySQL%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/" title="网络基础与MySQL快速上手">
+                        <span class="hidden-mobile">网络基础与MySQL快速上手</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
