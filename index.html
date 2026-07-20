@@ -1,1144 +1,199 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=auto>
-
-
-
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
-  
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="Bingsv">
-  <meta name="keywords" content="运维,Linux,Docker,云计算">
-  
-    <meta name="description" content="记录运维学习过程中的踩坑与收获">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Bingsv&#39;s Blog">
-<meta property="og:url" content="https://bingsv.github.io/index.html">
-<meta property="og:site_name" content="Bingsv&#39;s Blog">
-<meta property="og:description" content="记录运维学习过程中的踩坑与收获">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="Bingsv">
-<meta property="article:tag" content="运维,Linux,Docker,云计算">
-<meta name="twitter:card" content="summary_large_image">
-  
-  
-  
-  <title>Bingsv&#39;s Blog</title>
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
-
-
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
-  
-
-
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"bingsv.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
-
-    if (CONFIG.web_analytics.follow_dnt) {
-      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
-    }
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-  
-
-
-  
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bing's Lab</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, "Microsoft YaHei", sans-serif;
+            background: #0a0e14;
+            color: #bfc7d5;
+            line-height: 1.6;
+        }
+        .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+        .header { text-align: center; padding: 60px 0 30px; }
+        .avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, #3fb950, #1f6feb);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; font-size: 32px;
+        }
+        h1 { color: #e6edf3; font-size: 26px; margin-bottom: 6px; }
+        .tagline { color: #6e7681; font-size: 14px; margin-bottom: 4px; }
+        .status { font-size: 13px; color: #3fb950; }
+        .status::before { content: "● "; }
+        .intro {
+            max-width: 560px; margin: 16px auto 0;
+            padding: 16px 20px; background: #12161e;
+            border: 1px solid #1e2430; border-radius: 10px;
+            font-size: 13px; color: #8b949e; line-height: 1.8;
+        }
+        .intro strong { color: #e6edf3; }
+        .search-wrap { margin: 24px auto 0; max-width: 400px; position: relative; }
+        .search-wrap input {
+            width: 100%; padding: 10px 16px; border-radius: 20px;
+            border: 1px solid #1e2430; background: #12161e;
+            color: #e6edf3; font-size: 14px; outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-wrap input:focus { border-color: #1f6feb; }
+        .search-wrap input::placeholder { color: #484f58; }
+        .search-results {
+            position: absolute; top: 44px; left: 0; right: 0;
+            background: #12161e; border: 1px solid #1e2430;
+            border-radius: 10px; max-height: 300px; overflow-y: auto;
+            display: none; z-index: 10;
+        }
+        .search-results a {
+            display: block; padding: 10px 16px; color: #58a6ff;
+            text-decoration: none; font-size: 13px;
+            border-bottom: 1px solid #1e2430;
+        }
+        .search-results a:last-child { border-bottom: none; }
+        .search-results a:hover { background: #161b24; }
+        .search-results .no-result { padding: 16px; color: #6e7681; font-size: 13px; text-align: center; }
+        .links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 40px; margin-top: 30px; }
+        .links a {
+            display: flex; align-items: center; gap: 10px;
+            padding: 16px 20px; background: #12161e;
+            border: 1px solid #1e2430; border-radius: 10px;
+            color: #e6edf3; text-decoration: none; font-size: 14px;
+            transition: all 0.2s;
+        }
+        .links a:hover { border-color: #1f6feb; background: #161b24; }
+        .links .icon { font-size: 20px; }
+        .section { margin-bottom: 40px; }
+        .section h2 {
+            color: #8b949e; font-size: 12px; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 8px;
+            border-bottom: 1px solid #1e2430;
+        }
+        .skills { display: flex; flex-wrap: wrap; gap: 8px; }
+        .skill {
+            padding: 6px 14px; background: #12161e; border: 1px solid #1e2430;
+            border-radius: 20px; font-size: 13px; color: #7ee787;
+        }
+        .post-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #1e2430;
+        }
+        .post-item a { color: #58a6ff; text-decoration: none; font-size: 14px; }
+        .post-item a:hover { text-decoration: underline; }
+        .post-date { color: #484f58; font-size: 12px; white-space: nowrap; }
+        .post-more { text-align: right; margin-top: 12px; }
+        .post-more a { color: #8b949e; font-size: 13px; text-decoration: none; }
+        .footer { text-align: center; padding: 40px 0; color: #30363d; font-size: 12px; }
+        .footer span { margin: 0 8px; }
+        @media (max-width: 500px) {
+            .links { grid-template-columns: 1fr; }
+            .container { padding: 20px 16px; }
+            .header { padding: 30px 0 20px; }
+            .intro { font-size: 12px; }
+        }
+        .hide-on-public { display: none; }
+    </style>
+</head>
 <body>
-  
-
-  <header>
-    
-
-<div class="header-inner" style="height: 100vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
-    </a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content (desktop) -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/" target="_self">
-                <i class="iconfont icon-home-fill"></i>
-                <span>首页</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/" target="_self">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/" target="_self">
-                <i class="iconfont icon-category-fill"></i>
-                <span>分类</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/" target="_self">
-                <i class="iconfont icon-tags-fill"></i>
-                <span>标签</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/" target="_self">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
-              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
-            </a>
-          </li>
-        
-      </ul>
+<div class="container">
+    <div class="header">
+        <div class="avatar">🖥</div>
+        <h1>Bing's Lab</h1>
+        <p class="tagline">运维工程实习生 | 准大四 | 持续学习中</p>
+        <p class="status">bi-ng.top · <span id="post-count">加载中...</span></p>
+        <div class="intro hide-on-public" id="intro-section">
+            准大四学生，正在找<strong>运维实习生</strong>岗位。暑假从零开始，在阿里云 ECS 上独立搭建了整套运维体系——<strong>Docker 容器化、Nginx 反向代理、CI/CD 自动部署、Prometheus + Grafana 监控</strong>，最近在学 <strong>Kubernetes</strong>。踩过的坑都记录在博客和 GitHub 里。
+        </div>
+        <div class="search-wrap">
+            <input type="text" id="search-input" placeholder="搜索文章..." autocomplete="off">
+            <div class="search-results" id="search-results"></div>
+        </div>
     </div>
-  </div>
-</nav>
-
-<!-- Mobile grid menu overlay -->
-<div id="mobile-grid-menu" class="d-lg-none">
-  <div class="mobile-grid-menu-inner">
-    <div class="container">
-      <div class="row">
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-home-fill"></i>
-                  <span>首页</span>
-                </div>
-              </a>
-            </div>
-          
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/archives/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-archive-fill"></i>
-                  <span>归档</span>
-                </div>
-              </a>
-            </div>
-          
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/categories/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-category-fill"></i>
-                  <span>分类</span>
-                </div>
-              </a>
-            </div>
-          
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/tags/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-tags-fill"></i>
-                  <span>标签</span>
-                </div>
-              </a>
-            </div>
-          
-        
-          
-          
-          
-          
-            <div class="col-4 mobile-grid-cell">
-              <a href="/about/" target="_self">
-                <div class="mobile-grid-item">
-                  <i class="iconfont icon-user-fill"></i>
-                  <span>关于</span>
-                </div>
-              </a>
-            </div>
-          
-        
-        
-          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
-            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <div class="mobile-grid-item">
-                <i class="iconfont icon-search"></i>
-                <span>搜索</span>
-              </div>
-            </a>
-          </div>
-        
-        
-          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
-               data-label-light="开灯"
-               data-label-dark="关灯">
-            <a href="javascript:;" aria-label="Color Toggle">
-              <div class="mobile-grid-item">
-                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
-                <span id="mobile-color-toggle-label">关灯</span>
-              </div>
-            </a>
-          </div>
-        
-      </div>
+    <div class="links">
+        <a href="/archives/"><span class="icon">📝</span>技术博客<br><small style="color:#6e7681"><span id="post-count-2">加载中...</span></small></a>
+        <a href="https://github.com/Bingsv/ops-portfolio"><span class="icon">💻</span>运维作品集<br><small style="color:#6e7681">Docker · K8s · 监控</small></a>
+        <a href="https://github.com/Bingsv/blog-source"><span class="icon">🔧</span>博客源码<br><small style="color:#6e7681">CI/CD 自动部署</small></a>
+        <a href="/about/"><span class="icon">👤</span>关于我<br><small style="color:#6e7681">联系方式</small></a>
     </div>
-  </div>
-</div>
-
-  
-
-<div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          
-            <span id="subtitle" data-typed-text="An elegant Material-Design theme for Hexo"></span>
-          
+    <div class="section">
+        <h2>技术栈</h2>
+        <div class="skills">
+            <span class="skill">Linux</span><span class="skill">Docker</span><span class="skill">Nginx</span>
+            <span class="skill">Shell</span><span class="skill">Python</span><span class="skill">CI/CD</span>
+            <span class="skill">阿里云</span><span class="skill">MySQL</span><span class="skill">Git</span>
+            <span class="skill">HTTPS/SSL</span><span class="skill">Prometheus</span><span class="skill">Grafana</span>
+            <span class="skill">Kubernetes</span><span class="skill">k3s</span>
         </div>
-
-        
-      </div>
-
-      
-        <div class="scroll-down-bar">
-          <i class="iconfont icon-arrowdown"></i>
-        </div>
-      
     </div>
-  </div>
-</div>
-
-
-
-</div>
-
-  </header>
-
-  <main>
-    
-      <div class="container nopadding-x-md">
-        <div id="board"
-          style="margin-top: 0">
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<h1 style="display: none">Bingsv&#39;s Blog</h1>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/21/Kubernetes%E5%85%A5%E9%97%A8-k3s%E4%BB%8E%E5%AE%89%E8%A3%85%E5%88%B0%E9%83%A8%E7%BD%B2Flask/" target="_self">
-          Kubernetes入门—k3s从安装到部署Flask
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/21/Kubernetes%E5%85%A5%E9%97%A8-k3s%E4%BB%8E%E5%AE%89%E8%A3%85%E5%88%B0%E9%83%A8%E7%BD%B2Flask/" target="_self">
-        <div>
-          为什么要学 K8sDocker Compose 适合单机跑几个容器，但 Kubernetes 才是容器编排的事实标准。面试时”你会 K8s 吗”是标配问题。 k3s 是 Rancher 出的轻量版 Kubernetes，专为小机器和边缘场景设计，2核2G 就能跑。它打包了 containerd、kubelet、kubectl 等全套组件到一个 60MB 的二进制文件里。 本文记录在阿里云 ECS（
+    <div class="section">
+        <h2>最新文章</h2>
+        <div id="post-list">
+            <div class="post-item"><span style="color:#6e7681">加载中...</span></div>
         </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-21 01:30" pubdate>
-              2026-07-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Docker/">#Docker</a>
-            
-              <a href="/tags/Flask/">#Flask</a>
-            
-              <a href="/tags/Kubernetes/">#Kubernetes</a>
-            
-              <a href="/tags/k3s/">#k3s</a>
-            
-              <a href="/tags/%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/">#容器编排</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/18/Prometheus+Grafana%E7%9B%91%E6%8E%A7%E4%BD%93%E7%B3%BB%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA/" target="_self">
-          Prometheus+Grafana监控体系从零搭建
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/18/Prometheus+Grafana%E7%9B%91%E6%8E%A7%E4%BD%93%E7%B3%BB%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA/" target="_self">
-        <div>
-          为什么要搞监控之前服务器上跑着 Glances（:8080），能实时看 CPU、内存、磁盘——但关掉页面就没了。真正生产环境需要三样东西：  历史数据——昨天凌晨 3 点 CPU 有没有突然飙高？看曲线就知道 自动告警——半夜服务挂了，总不能靠人盯着 可视化面板——一眼看清整个系统状态，不用挨个敲命令  Prometheus + Grafana 就是这个领域的标准组合。本文记录我在阿里云 ECS
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-18 11:00" pubdate>
-              2026-07-18
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Docker/">#Docker</a>
-            
-              <a href="/tags/Nginx/">#Nginx</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/Grafana/">#Grafana</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7/">#监控</a>
-            
-              <a href="/tags/Node-Exporter/">#Node Exporter</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/09/Flask%E4%BB%8E%E9%9B%B6%E5%88%B0Docker%E5%8C%96%E9%83%A8%E7%BD%B2/" target="_self">
-          Flask从零到Docker化部署
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/09/Flask%E4%BB%8E%E9%9B%B6%E5%88%B0Docker%E5%8C%96%E9%83%A8%E7%BD%B2/" target="_self">
-        <div>
-          为什么学 Flask之前博客是纯静态 HTML，没有”活”的后台。学 Flask 是为了写一个能返回实时数据的 Web 应用——比如查服务器状态、磁盘、内存这些实时变化的数据。 第一个 Flask 应用1234567891011121314from flask import Flask, jsonifyimport osapp = Flask(__name__)@app.route(&#x27;/
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-09 02:38" pubdate>
-              2026-07-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Docker/">#Docker</a>
-            
-              <a href="/tags/Python/">#Python</a>
-            
-              <a href="/tags/Flask/">#Flask</a>
-            
-              <a href="/tags/Nginx/">#Nginx</a>
-            
-              <a href="/tags/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/">#反向代理</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/07/%E5%9F%9F%E5%90%8DHTTPS%E4%B8%8EGit%E5%88%86%E6%94%AF%E5%AE%9E%E6%88%98/" target="_self">
-          域名HTTPS与Git分支实战
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/07/%E5%9F%9F%E5%90%8DHTTPS%E4%B8%8EGit%E5%88%86%E6%94%AF%E5%AE%9E%E6%88%98/" target="_self">
-        <div>
-          终于有域名了买了 bi-ng.top，首年几块钱。不用再给人看 47.99.166.175 这种裸 IP 了。 DNS 解析配置阿里云域名解析 → 添加两条 CNAME 记录：    记录类型 主机记录 记录值    CNAME @ Bingsv.github.io   CNAME www Bingsv.github.io   @ 代表域名本身 bi-ng.top，www 代表 www.bi-ng
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-07 22:00" pubdate>
-              2026-07-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%9F%9F%E5%90%8D/">#域名</a>
-            
-              <a href="/tags/HTTPS/">#HTTPS</a>
-            
-              <a href="/tags/Git/">#Git</a>
-            
-              <a href="/tags/GitHub-Pages/">#GitHub Pages</a>
-            
-              <a href="/tags/systemd/">#systemd</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/07/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E4%B8%8EMySQL%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/" target="_self">
-          网络基础与MySQL快速上手
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/07/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E4%B8%8EMySQL%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/" target="_self">
-        <div>
-          网络基础运维每天和网络打交道——SSH 要用 TCP、配域名要用 DNS、排查不通要用端口测试。 TCP 三次握手建立连接前，客户端和服务器要确认双方都能收发： 123456789客户端                          服务器   │                               │   │──── SYN (我想连你) ──────────→│   第1次   │
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-07 13:14" pubdate>
-              2026-07-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Docker/">#Docker</a>
-            
-              <a href="/tags/%E7%BD%91%E7%BB%9C/">#网络</a>
-            
-              <a href="/tags/TCP/">#TCP</a>
-            
-              <a href="/tags/DNS/">#DNS</a>
-            
-              <a href="/tags/MySQL/">#MySQL</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/04/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B8%8EPython%E8%BF%90%E7%BB%B4%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8/" target="_self">
-          进程管理与Python运维脚本入门
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/04/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B8%8EPython%E8%BF%90%E7%BB%B4%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8/" target="_self">
-        <div>
-          进程管理：服务器上的”任务管理器”每个运行中的程序都是一个进程。Nginx 是进程、Docker 是进程、你的 SSH 连接也是进程。 ps — 查看进程1ps aux     列 含义    USER 谁启动的   PID 进程 ID（唯一编号）   %CPU CPU 占用   %MEM 内存占用   STAT S&#x3D;睡眠 R&#x3D;运行 Z&#x3D;僵尸   在你的服务器上跑 p
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-04 19:02" pubdate>
-              2026-07-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/Shell/">#Shell</a>
-            
-              <a href="/tags/Python/">#Python</a>
-            
-              <a href="/tags/systemd/">#systemd</a>
-            
-              <a href="/tags/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/">#进程管理</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/03/Docker%E8%BF%9B%E9%98%B6-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%95%9C%E5%83%8F%E4%B8%8E%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93/" target="_self">
-          Docker进阶-自定义镜像与镜像仓库
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/03/Docker%E8%BF%9B%E9%98%B6-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%95%9C%E5%83%8F%E4%B8%8E%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93/" target="_self">
-        <div>
-          上篇回顾之前已经学会了拉镜像、跑容器、用 Compose 管理多个服务。但一直用的是别人的镜像（nginx:alpine），博客文件靠挂载目录。 这次学两件事：自己写镜像 + 把镜像存到仓库。  第一部分：写自己的 Dockerfile为什么要自己写镜像之前跑 Nginx 是这样： 1docker run -d -p 80:80 -v ~/blog-static:/usr/share/nginx/
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-03 15:33" pubdate>
-              2026-07-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/">#阿里云</a>
-            
-              <a href="/tags/Docker/">#Docker</a>
-            
-              <a href="/tags/Dockerfile/">#Dockerfile</a>
-            
-              <a href="/tags/%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93/">#镜像仓库</a>
-            
-              <a href="/tags/%E5%AE%B9%E5%99%A8/">#容器</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/02/%E4%BB%8E%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E5%88%B0%E5%85%A8%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2/" target="_self">
-          从一键脚本到全自动部署
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/02/%E4%BB%8E%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC%E5%88%B0%E5%85%A8%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2/" target="_self">
-        <div>
-          起点：手动操作最开始更新博客要走三步：  本地 hexo generate 生成静态文件 scp 上传到 ECS 服务器 SSH 上去 docker compose restart nginx  后来写了个 deploy-blog.sh 把三步合成一条命令，已经方便了很多。但还是得手动执行。 真正的自动化是什么？push 代码，剩下的全自动。 这就是今天要搞的——GitHub Actions CI
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-02 17:58" pubdate>
-              2026-07-02
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E8%BF%90%E7%BB%B4/">#运维</a>
-            
-              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">#自动化</a>
-            
-              <a href="/tags/CI-CD/">#CI/CD</a>
-            
-              <a href="/tags/GitHub-Actions/">#GitHub Actions</a>
-            
-              <a href="/tags/DevOps/">#DevOps</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/07/01/Shell%E8%84%9A%E6%9C%AC%E4%BB%8E%E9%9B%B6%E5%88%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" target="_self">
-          Shell脚本从零到自动化部署
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/01/Shell%E8%84%9A%E6%9C%AC%E4%BB%8E%E9%9B%B6%E5%88%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" target="_self">
-        <div>
-          从一行命令到脚本运维最开始的起点很简单：SSH 登录服务器，敲命令。 但敲久了就发现，有些命令组合你每天都要跑——查磁盘、看内存、确认容器活着没。每次都手打一遍？太蠢了。 Shell 脚本就是把重复的手动操作，写成一个文件，以后一行跑完。  第一版：能跑就行最开始写的健康检查脚本长这样： 123456789#!/bin/bashecho &quot;磁盘使用率&quot;df -h /echo &
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-07-01 15:41" pubdate>
-              2026-07-01
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E8%BF%90%E7%BB%B4/">#运维</a>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/Shell/">#Shell</a>
-            
-              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">#自动化</a>
-            
-              <a href="/tags/Bash/">#Bash</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2026/06/27/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/" target="_self">
-          阿里云ECS从零搭建记录
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/06/27/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/" target="_self">
-        <div>
-          背景作为一名准大四学生，暑假开始系统学习运维。第一步是在云上搞一台属于自己的 Linux 服务器。 我选择了阿里云的学生优惠——**”学生专属算力包”**，有 850 元额度，对学习来说完全够用。 选型过程学生认证之前阿里云学生认证过期了，重新验证了下，很快通过。 选哪个实例学生计划里有几个选项：  e实例 2核2G 轻量应用服务器 2核2G c7实例 2核4G  最终选了 e实例 2核2G，因为
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2026-06-27 01:06" pubdate>
-              2026-06-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/">#阿里云</a>
-            
-              <a href="/tags/ECS/">#ECS</a>
-            
-              <a href="/tags/%E8%BF%90%E7%BB%B4/">#运维</a>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-
-
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-
-    
-      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
+        <div class="post-more"><a href="/archives/">查看全部 →</a></div>
     </div>
-  </div>
-</div>
-
-    
-
-    
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-  
-    <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    <div class="section">
+        <h2>项目</h2>
+        <div class="post-item"><a href="https://github.com/Bingsv/ops-portfolio">运维配置归档</a><span class="post-date">Docker · K8s · 监控</span></div>
+        <div class="post-item"><a href="https://github.com/Bingsv/blog-source">博客源码 + CI/CD</a><span class="post-date">GitHub Actions · Hexo</span></div>
     </div>
-  
-  
-  
+    <div class="footer"><span>bi-ng.top</span><span>·</span><span>GitHub Pages</span><span>·</span><span>Hexo + Fluid</span></div>
 </div>
+<script>
+var allPosts = [];
+fetch('/local-search.xml')
+  .then(function(r) { return r.text(); })
+  .then(function(xml) {
+    var doc = new DOMParser().parseFromString(xml, 'text/xml');
+    allPosts = [].slice.call(doc.querySelectorAll('entry')).map(function(e) {
+      var url = e.querySelector('url').textContent;
+      var m = url.match(/\/(\d{4})\/(\d{2})\/(\d{2})\//);
+      return {
+        title: e.querySelector('title').textContent,
+        url: url,
+        date: m ? m[2] + '/' + m[3] : ''
+      };
+    });
+    var cnt = allPosts.length;
+    document.getElementById('post-count').textContent = cnt + ' 篇运维文章';
+    document.getElementById('post-count-2').textContent = cnt + ' 篇运维文章';
+    renderPosts(allPosts.slice().reverse().slice(0, 5));
+  })
+  .catch(function() {
+    document.getElementById('post-list').innerHTML = '<div class="post-item"><a href="/archives/">查看所有文章 →</a></div>';
+  });
 
-  </footer>
+function renderPosts(posts) {
+  document.getElementById('post-list').innerHTML = posts.map(function(p) {
+    return '<div class="post-item"><a href="' + p.url + '">' + p.title + '</a><span class="post-date">' + p.date + '</span></div>';
+  }).join('');
+}
 
-  <!-- Scripts -->
-  
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+var inp = document.getElementById('search-input');
+var res = document.getElementById('search-results');
+inp.addEventListener('input', function() {
+  var q = this.value.trim().toLowerCase();
+  if (!q) { res.style.display = 'none'; return; }
+  var matched = allPosts.filter(function(p) { return p.title.toLowerCase().indexOf(q) !== -1; }).slice(0, 8);
+  if (matched.length === 0) {
+    res.innerHTML = '<div class="no-result">没有找到相关文章</div>';
+  } else {
+    res.innerHTML = matched.map(function(p) {
+      return '<a href="' + p.url + '">' + p.title + '</a>';
+    }).join('');
+  }
+  res.style.display = 'block';
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.search-wrap')) res.style.display = 'none';
+});
 
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
-    })(window, document);
-  </script>
-
-
-
-
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
-
-
-
-
-  <script  src="/js/local-search.js" ></script>
-
-
-
-
-
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
-
-
-  
-
-  <noscript>
-    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
-  </noscript>
+// 域名适配：bi-ng.top 隐藏自我介绍
+if (window.location.hostname === "bi-ng.top") {
+  var introEl = document.getElementById("intro-section");
+  if (introEl) introEl.style.display = "none";
+}
+</script>
 </body>
 </html>
