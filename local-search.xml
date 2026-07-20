@@ -22,13 +22,13 @@
       
       <tag>Docker</tag>
       
-      <tag>Flask</tag>
-      
       <tag>Kubernetes</tag>
       
       <tag>k3s</tag>
       
       <tag>容器编排</tag>
+      
+      <tag>Flask</tag>
       
     </tags>
     
@@ -90,9 +90,9 @@
       
       <tag>Docker</tag>
       
-      <tag>Python</tag>
-      
       <tag>Flask</tag>
+      
+      <tag>Python</tag>
       
       <tag>Nginx</tag>
       
