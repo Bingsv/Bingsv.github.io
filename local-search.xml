@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>MySQL主从复制实战—Docker双机搭建</title>
+    <link href="/2026/07/23/MySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%AE%9E%E6%88%98-Docker%E5%8F%8C%E6%9C%BA%E6%90%AD%E5%BB%BA/"/>
+    <url>/2026/07/23/MySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%AE%9E%E6%88%98-Docker%E5%8F%8C%E6%9C%BA%E6%90%AD%E5%BB%BA/</url>
+    
+    <content type="html"><![CDATA[<h2 id="为什么要搞主从"><a href="#为什么要搞主从" class="headerlink" title="为什么要搞主从"></a>为什么要搞主从</h2><p>单机 MySQL 挂了就没了。主从复制是最基础的数据库高可用方案——主库负责写，从库负责读。</p><h2 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h2><p>一句话：<strong>主库把写操作记到 binlog，从库拉取 binlog 重放。</strong></p><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">主库 <span class="hljs-keyword">INSERT</span> → binlog → Slave IO线程拉取 → relay <span class="hljs-keyword">log</span> → Slave <span class="hljs-keyword">SQL</span>线程重放 → 从库数据一致<br></code></pre></td></tr></table></figure><p>三个线程：Master IO线程 &#x2F; Slave IO线程 &#x2F; Slave SQL线程。</p><h2 id="Docker-搭建"><a href="#Docker-搭建" class="headerlink" title="Docker 搭建"></a>Docker 搭建</h2><p>Master 配置：<code>server-id=1, log-bin=mysql-bin, binlog-format=ROW</code><br>Slave 配置：<code>server-id=2, relay-log=mysql-relay-bin, read-only=ON</code></p><p>Master :3306，Slave :3307。</p><h2 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h2><ol><li>Master 创建复制用户 <code>GRANT REPLICATION SLAVE</code></li><li><code>SHOW MASTER STATUS</code> 记 File + Position</li><li>Slave <code>CHANGE REPLICATION SOURCE TO</code> + <code>START REPLICA</code></li><li>验证 <code>Replica_IO_Running: Yes</code> + <code>Replica_SQL_Running: Yes</code></li></ol><h2 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h2><table><thead><tr><th>坑</th><th>解决</th></tr></thead><tbody><tr><td>从库没数据库</td><td>CREATE DATABASE + 手动建表</td></tr><tr><td>Position 错位</td><td>RESET REPLICA ALL 重新对齐</td></tr></tbody></table><h2 id="面试要点"><a href="#面试要点" class="headerlink" title="面试要点"></a>面试要点</h2><ul><li><strong>原理</strong>：binlog → IO线程 → relay log → SQL线程</li><li><strong>延迟</strong>：并行复制、半同步、拆小事务</li><li><strong>主库挂了</strong>：从库关只读切流量，生产用 MHA&#x2F;Orchestrator</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>运维</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Docker</tag>
+      
+      <tag>MySQL</tag>
+      
+      <tag>主从复制</tag>
+      
+      <tag>数据库</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Kubernetes入门—k3s从安装到部署Flask</title>
     <link href="/2026/07/21/Kubernetes%E5%85%A5%E9%97%A8-k3s%E4%BB%8E%E5%AE%89%E8%A3%85%E5%88%B0%E9%83%A8%E7%BD%B2Flask/"/>
     <url>/2026/07/21/Kubernetes%E5%85%A5%E9%97%A8-k3s%E4%BB%8E%E5%AE%89%E8%A3%85%E5%88%B0%E9%83%A8%E7%BD%B2Flask/</url>
@@ -156,13 +187,13 @@
       
       <tag>Docker</tag>
       
+      <tag>MySQL</tag>
+      
       <tag>网络</tag>
       
       <tag>TCP</tag>
       
       <tag>DNS</tag>
-      
-      <tag>MySQL</tag>
       
     </tags>
     
