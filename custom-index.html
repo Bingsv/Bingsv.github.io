@@ -26,8 +26,8 @@
 <meta property="og:site_name" content="Bingsv&#39;s Blog">
 <meta property="og:description" content="Bing&#39;s Lab              * { margin: 0; padding: 0; box-sizing: border-box; }         body {             font-family: -apple-system, &quot;Microsoft YaHei&quot;, sans-serif;             backgrou">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-07-26T07:20:34.449Z">
-<meta property="article:modified_time" content="2026-07-26T07:20:34.449Z">
+<meta property="article:published_time" content="2026-07-26T07:56:15.233Z">
+<meta property="article:modified_time" content="2026-07-26T07:56:15.233Z">
 <meta property="article:author" content="Bingsv">
 <meta property="article:tag" content="运维,Linux,Docker,云计算">
 <meta name="twitter:card" content="summary_large_image">
@@ -360,6 +360,11 @@
             font-size: 13px; color: #8b949e; line-height: 1.8;
         }
         .intro strong { color: #e6edf3; }
+        .server-tag {
+            display: inline-block; margin-top: 8px; padding: 3px 10px;
+            background: #1f6feb22; border: 1px solid #1f6feb44;
+            border-radius: 12px; font-size: 11px; color: #58a6ff;
+        }
         .search-wrap { margin: 24px auto 0; max-width: 400px; position: relative; }
         .search-wrap input {
             width: 100%; padding: 10px 16px; border-radius: 20px;
@@ -413,6 +418,17 @@
         .post-date { color: #484f58; font-size: 12px; white-space: nowrap; }
         .post-more { text-align: right; margin-top: 12px; }
         .post-more a { color: #8b949e; font-size: 13px; text-decoration: none; }
+        /* 内部工具区块 — 仅 47 显示 */
+        .internal-only { display: none; }
+        .host-ecs .internal-only { display: block; }
+        .tool-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #1e2430;
+        }
+        .tool-item a { color: #7ee787; text-decoration: none; font-size: 14px; }
+        .tool-item a:hover { text-decoration: underline; }
+        .tool-item .tool-info { color: #484f58; font-size: 12px; }
+        .tool-item .tool-status { font-size: 11px; color: #3fb950; }
         .footer { text-align: center; padding: 40px 0; color: #30363d; font-size: 12px; }
         .footer span { margin: 0 8px; }
         @media (max-width: 500px) {
@@ -424,26 +440,57 @@
     </style>
 </head>
 <body>
+<!-- 域名检测：ECS 打标，GitHub Pages 不打 -->
+<script>
+(function() {
+  var host = window.location.hostname;
+  if (host === '47.99.166.175' || host.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+    document.body.className = 'host-ecs';
+  }
+})();
+</script>
 <div class="container">
     <div class="header">
         <div class="avatar">🖥</div>
         <h1 id="bing's-lab">Bing's Lab</h1>
         <p class="tagline">运维工程实习生 | 准大四 | 持续学习中</p>
         <p class="status">bi-ng.top · <span id="post-count">加载中...</span></p>
-        <div class="intro">
-            准大四学生，正在找<strong>运维实习生</strong>岗位。暑假从零开始，在阿里云 ECS 上独立搭建了整套运维体系——<strong>Docker 容器化、Nginx 反向代理、CI/CD 自动部署、Prometheus + Grafana 监控</strong>，最近在学 <strong>Kubernetes</strong>。踩过的坑都记录在博客和 GitHub 里。
+        <div class="intro" id="intro-text">
+            准大四学生，正在找<strong>运维实习生</strong>岗位。暑假从零开始，在阿里云 ECS 上独立搭建了整套运维体系——<strong>Docker 容器化、Nginx 反向代理、CI/CD 自动部署、Glances 实时监控</strong>，最近在学 <strong>Kubernetes</strong>。踩过的坑都记录在博客和 GitHub 里。
+            <br><span class="server-tag internal-only">📍 ECS 内网 · 47.99.166.175</span>
         </div>
         <div class="search-wrap">
             <input type="text" id="search-input" placeholder="搜索文章..." autocomplete="off">
             <div class="search-results" id="search-results"></div>
         </div>
     </div>
+
+    <!-- 公开入口 -->
     <div class="links">
         <a href="/archives/"><span class="icon">📝</span>技术博客<br><small style="color:#6e7681"><span id="post-count-2">加载中...</span></small></a>
         <a target="_blank" rel="noopener" href="https://github.com/Bingsv/ops-portfolio"><span class="icon">💻</span>运维作品集<br><small style="color:#6e7681">Docker · K8s · 监控</small></a>
         <a target="_blank" rel="noopener" href="https://github.com/Bingsv/blog-source"><span class="icon">🔧</span>博客源码<br><small style="color:#6e7681">CI/CD 自动部署</small></a>
         <a href="/about/"><span class="icon">👤</span>关于我<br><small style="color:#6e7681">联系方式</small></a>
     </div>
+
+    <!-- ═══ 内部工具 — 仅 47 可见 ═══ -->
+    <div class="section internal-only">
+        <h2>🛠 内部工具</h2>
+        <div class="tool-item">
+            <a href="http://47.99.166.175:8080" target="_blank">📊 Glances 实时监控</a>
+            <span class="tool-status">● 运行中</span>
+        </div>
+        <div class="tool-item">
+            <span style="color:#8b949e;font-size:14px">🖥 SSH 连接</span>
+            <span class="tool-info">ssh bing@47.99.166.175</span>
+        </div>
+        <div class="tool-item">
+            <a href="http://47.99.166.175:8080" target="_blank">💾 系统资源</a>
+            <span class="tool-info">CPU · 内存 · 磁盘 · 进程</span>
+        </div>
+    </div>
+
+    <!-- 技术栈 -->
     <div class="section">
         <h2>技术栈</h2>
         <div class="skills">
@@ -454,6 +501,8 @@
             <span class="skill">Kubernetes</span><span class="skill">k3s</span>
         </div>
     </div>
+
+    <!-- 最新文章 -->
     <div class="section">
         <h2>最新文章</h2>
         <div id="post-list">
@@ -461,11 +510,14 @@
         </div>
         <div class="post-more"><a href="/archives/">查看全部 →</a></div>
     </div>
+
+    <!-- 项目 -->
     <div class="section">
         <h2>项目</h2>
         <div class="post-item"><a target="_blank" rel="noopener" href="https://github.com/Bingsv/ops-portfolio">运维配置归档</a><span class="post-date">Docker · K8s · 监控</span></div>
         <div class="post-item"><a target="_blank" rel="noopener" href="https://github.com/Bingsv/blog-source">博客源码 + CI/CD</a><span class="post-date">GitHub Actions · Hexo</span></div>
     </div>
+
     <div class="footer"><span>bi-ng.top</span><span>·</span><span>GitHub Pages</span><span>·</span><span>Hexo + Fluid</span></div>
 </div>
 <script>
