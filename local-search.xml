@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>告警去重实现</title>
+    <title></title>
     <link href="/2026/08/04/%E5%91%8A%E8%AD%A6%E5%8E%BB%E9%87%8D%E5%AE%9E%E7%8E%B0/"/>
     <url>/2026/08/04/%E5%91%8A%E8%AD%A6%E5%8E%BB%E9%87%8D%E5%AE%9E%E7%8E%B0/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<hr><h2 id="title-告警去重实现date-2026-08-04-22-23-56tags-Python-监控-运维"><a href="#title-告警去重实现date-2026-08-04-22-23-56tags-Python-监控-运维" class="headerlink" title="title:告警去重实现date:2026-08-04 22:23:56tags:[Python,监控,运维]"></a>title:告警去重实现<br>date:2026-08-04 22:23:56<br>tags:[Python,监控,运维]</h2><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>服务挂掉时，监控每 5 分钟检查一次，每次都发微信告警，造成告警轰炸。</p><h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>用 JSON 文件记录每个服务上次告警时间，30 分钟内同服务不重复发送；服务恢复后清掉记录，下次再挂立即重新告警。</p><h2 id="核心逻辑"><a href="#核心逻辑" class="headerlink" title="核心逻辑"></a>核心逻辑</h2><ol><li>读取状态文件 <code>.alert_state.json</code></li><li>失败的服务如果在 30 分钟内已告警过 → 跳过</li><li>否则发送告警并记录时间</li><li>每次检查后清理已恢复服务的记录</li></ol><h2 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h2><p>（贴你写的去重逻辑）</p><h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>连续 3 次故障只收到 1 条告警。</p>]]></content>
     
     
     
